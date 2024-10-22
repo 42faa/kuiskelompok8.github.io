@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Pola Hidup Sehat - Kelompok 8</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f9ff;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            background-color: #0ea5e9;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .team-members {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            color: #e0f2fe;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .option:hover {
+            background-color: #bae6fd;
+        }
+
+        .next-btn {
+            background-color: #0ea5e9;
+            color: white;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .next-btn:hover {
+            background-color: #0284c7;
+        }
+
+        .result {
+            text-align: center;
+            display: none;
+        }
+
+        .result-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0ea5e9;
+            margin: 1rem 0;
+        }
+
+        .result-category {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #0369a1;
+        }
+
+        .health-tips {
+            background-color: #f0f9ff;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e0f2fe;
+            border-radius: 5px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #0ea5e9;
+            transition: width 0.3s ease;
+        }
+
+        .restart-btn {
+            background-color: #0ea5e9;
+            color: white;
+            margin-top: 1rem;
+        }
+
+        .restart-btn:hover {
+            background-color: #0284c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kuis Pola Hidup Sehat</h1>
+            <div class="team-members">
+                <p>Kelompok 8</p>
+                <p>Azfa • Yussha • D Silvi • Selli</p>
+            </div>
+        </header>
+
+        <div class="quiz-container">
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+
+            <div id="quiz"></div>
+            <button class="next-btn">Selanjutnya</button>
+
+            <div class="result">
+                <h2>Hasil Kuis Anda</h2>
+                <div class="result-score"></div>
+                <div class="result-category"></div>
+                <div class="health-tips"></div>
+                <button class="restart-btn">Ulangi Kuis</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Berapa kali sebaiknya kita makan dalam sehari?",
+                options: ["2 kali", "3 kali", "4 kali", "5 kali"],
+                correct: 1,
+                explanation: "Makan 3 kali sehari dengan porsi seimbang adalah pola makan yang dianjurkan."
+            },
+            {
+                question: "Berapa lama minimal waktu ideal untuk berolahraga dalam sehari?",
+                options: ["15 menit", "30 menit", "45 menit", "60 menit"],
+                correct: 1,
+                explanation: "Minimal 30 menit olahraga sehari untuk menjaga kesehatan tubuh."
+            },
+            {
+                question: "Berapa gelas air yang sebaiknya diminum dalam sehari?",
+                options: ["4-5 gelas", "6-7 gelas", "8 gelas", "10-12 gelas"],
+                correct: 2,
+                explanation: "Minimal 8 gelas air sehari untuk menjaga hidrasi tubuh."
+            },
+            {
+                question: "Kapan waktu terbaik untuk sarapan?",
+                options: ["Sebelum jam 7 pagi", "Antara jam 7-9 pagi", "Setelah jam 9 pagi", "Tidak perlu sarapan"],
+                correct: 1,
+                explanation: "Sarapan ideal dilakukan antara jam 7-9 pagi."
+            },
+            {
+                question: "Berapa jam waktu tidur ideal untuk orang dewasa?",
+                options: ["5-6 jam", "6-7 jam", "7-9 jam", "9-10 jam"],
+                correct: 2,
+                explanation: "7-9 jam tidur per hari optimal untuk orang dewasa."
+            },
+            {
+                question: "Manakah makanan yang paling sehat untuk sarapan?",
+                options: ["Nasi goreng", "Bubur ayam", "Oatmeal dengan buah", "Roti bakar dengan selai"],
+                correct: 2,
+                explanation: "Oatmeal dengan buah kaya serat dan nutrisi penting untuk memulai hari."
+            },
+            {
+                question: "Berapa kali minimal sebaiknya berolahraga dalam seminggu?",
+                options: ["1-2 kali", "3-4 kali", "5-6 kali", "Setiap hari"],
+                correct: 1,
+                explanation: "3-4 kali per minggu adalah frekuensi ideal untuk berolahraga."
+            },
+            {
+                question: "Apa yang sebaiknya dilakukan setelah makan?",
+                options: ["Langsung tidur", "Langsung mandi", "Berjalan ringan", "Duduk diam"],
+                correct: 2,
+                explanation: "Berjalan ringan setelah makan membantu pencernaan."
+            },
+            {
+                question: "Berapa lama sebaiknya jeda waktu makan dengan tidur?",
+                options: ["1 jam", "2 jam", "3 jam", "4 jam"],
+                correct: 2,
+                explanation: "Minimal 3 jam jeda antara makan dan tidur untuk pencernaan optimal."
+            },
+            {
+                question: "Manakah yang termasuk kebiasaan hidup sehat?",
+                options: ["Tidur larut malam", "Makan tidak teratur", "Olahraga berlebihan", "Meditasi rutin"],
+                correct: 3,
+                explanation: "Meditasi rutin membantu mengelola stres dan meningkatkan kesehatan mental."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        const quizElement = document.getElementById('quiz');
+        const nextButton = document.querySelector('.next-btn');
+        const resultElement = document.querySelector('.result');
+        const progressBar = document.querySelector('.progress');
+        const restartButton = document.querySelector('.restart-btn');
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            
+            let questionHTML = `
+                <div class="question active">
+                    <h2>Pertanyaan ${currentQuestion + 1} dari ${questions.length}</h2>
+                    <p>${question.question}</p>
+                    <div class="options">
+            `;
+
+            question.options.forEach((option, index) => {
+                questionHTML += `
+                    <button class="option" onclick="checkAnswer(${index})">${option}</button>
+                `;
+            });
+
+            questionHTML += `</div></div>`;
+            quizElement.innerHTML = questionHTML;
+            
+            updateProgress();
+        }
+
+        function checkAnswer(selected) {
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach(option => {
+                option.disabled = true;
+            });
+
+            if (selected === question.correct) {
+                options[selected].style.backgroundColor = '#86efac';
+                score++;
+            } else {
+                options[selected].style.backgroundColor = '#fecaca';
+                options[question.correct].style.backgroundColor = '#86efac';
+            }
+
+            nextButton.style.display = 'block';
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function showResult() {
+            const percentage = (score / questions.length) * 100;
+            let category;
+            let tips;
+
+            if (percentage >= 80) {
+                category = "Sangat Baik!";
+                tips = "Pertahankan pola hidup sehat Anda! Teruskan kebiasaan baik ini dan bagikan pengetahuan Anda kepada orang lain.";
+            } else if (percentage >= 60) {
+                category = "Cukup Baik";
+                tips = "Anda sudah di jalur yang benar! Tingkatkan pengetahuan tentang pola hidup sehat dan terapkan dalam keseharian.";
+            } else {
+                category = "Perlu Ditingkatkan";
+                tips = "Mulailah dengan perubahan kecil dalam keseharian. Konsultasikan dengan ahli kesehatan untuk panduan lebih lanjut.";
+            }
+
+            document.querySelector('.result-score').textContent = `Skor: ${percentage}%`;
+            document.querySelector('.result-category').textContent = category;
+            document.querySelector('.health-tips').innerHTML = `
+                <h3>Tips Kesehatan:</h3>
+                <p>${tips}</p>
+            `;
+
+            quizElement.style.display = 'none';
+            nextButton.style.display = 'none';
+            resultElement.style.display = 'block';
+        }
+
+        nextButton.addEventListener('click', () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+                nextButton.style.display = 'none';
+            } else {
+                showResult();
+            }
+        });
+
+        restartButton.addEventListener('click', () => {
+            currentQuestion = 0;
+            score = 0;
+            quizElement.style.display = 'block';
+            resultElement.style.display = 'none';
+            showQuestion();
+            updateProgress();
+        });
+
+        showQuestion();
+    </script>
+</body>
+</html>
